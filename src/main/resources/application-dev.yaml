@@ -2,7 +2,7 @@ spring:
   application:
     name: nettyapp
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:mytest}?useUnicode=true&characterEncoding=UTF-8&allowMutiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_callback}?useUnicode=true&characterEncoding=UTF-8&allowMutiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_USERNAME:}
     driver-class-name: com.mysql.cj.jdbc.Driver
