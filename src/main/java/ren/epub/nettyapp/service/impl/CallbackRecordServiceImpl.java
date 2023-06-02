@@ -3,13 +3,13 @@ package ren.epub.nettyapp.service.impl;
 import org.springframework.stereotype.Service;
 import ren.epub.nettyapp.dao.CallbackrecordDAO;
 import ren.epub.nettyapp.domain.Callbackrecord;
-import ren.epub.nettyapp.domain.CallbackrecordExample;
-import ren.epub.nettyapp.domain.CallbackrecordWithBLOBs;
 import ren.epub.nettyapp.service.CallbackRecordService;
+import ren.epub.nettyapp.utils.PageUtils;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CallbackRecordServiceImpl implements CallbackRecordService {
@@ -22,24 +22,17 @@ public class CallbackRecordServiceImpl implements CallbackRecordService {
 
     @Override
     public List<Callbackrecord> findCallbackRecords(Integer page, Integer size) {
-        CallbackrecordExample example = new CallbackrecordExample();
-        example.setLimit(size);
-        example.setOffset(page.longValue());
-        example.setOrderByClause("created_at DESC");
-        List<Callbackrecord> callbackrecordList = callbackrecordDAO.selectByExampleWithBLOBs(example);
-        if (callbackrecordList!=null){
-            return callbackrecordList;
-        }else {
-            return Collections.emptyList();
-        }
+        PageUtils pageUtils = new PageUtils(page,size);
+        List<Callbackrecord> callbackrecordList = callbackrecordDAO.selectByExampleWithBLOBs(pageUtils.getPage(), pageUtils.getSize());
+        return Objects.requireNonNullElse(callbackrecordList, Collections.emptyList());
     }
 
     @Override
     public void addCallbackRecord(String reqHeader, String reqBody) {
-        CallbackrecordWithBLOBs record = new CallbackrecordWithBLOBs();
+        Callbackrecord record = new Callbackrecord();
         record.setCreatedAt(new Date());
-        record.setReqBody(reqBody!=null ? reqBody:"");
-        record.setReqHeader(reqHeader!=null ? reqHeader:"");
+        record.setReqBody(reqBody!=null?reqBody:"");
+        record.setReqHeader(reqHeader!=null?reqHeader:"");
         callbackrecordDAO.insert(record);
     }
 }

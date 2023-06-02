@@ -10,6 +10,9 @@ import io.netty.handler.codec.http.*;
 import io.netty.util.AsciiString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ren.epub.nettyapp.service.CallbackRecordService;
+import ren.epub.nettyapp.service.impl.CallbackRecordServiceImpl;
+import ren.epub.nettyapp.utils.ApplicationContextGetBeanHelper;
 
 
 import java.nio.charset.StandardCharsets;
@@ -26,6 +29,8 @@ import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     private static final Logger Log = LoggerFactory.getLogger(HttpHandler.class);
 
+    private final CallbackRecordService callbackRecordService = ApplicationContextGetBeanHelper.getBean(CallbackRecordServiceImpl.class);
+
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.flush();
@@ -36,23 +41,23 @@ public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         if (Objects.nonNull(request)) {
             boolean keepAlive = HttpUtil.isKeepAlive(request);
             ChannelFuture f = null;
-
+            HttpHeaders headers = request.headers();
             ByteBuf buf = request.content();
             if (buf!=null){
                 String body = buf.toString(StandardCharsets.UTF_8);
                 Log.info("request body => {}", body);
-            }
-
-            HttpHeaders headers = request.headers();
-
-            if(headers!=null){
                 Iterator<Map.Entry<String, String>> iterator = headers.iteratorAsString();
+                StringBuilder stringBuilder = new StringBuilder();
                 while (iterator.hasNext()){
                     Map.Entry<String, String> head = iterator.next();
+                    stringBuilder.append(head.toString());
+                    stringBuilder.append("  \n");
                     Log.info("request hader => {}", head.toString());
                 }
+                if (this.callbackRecordService != null) {
+                    this.callbackRecordService.addCallbackRecord(stringBuilder.toString(),body);
+                }
             }
-
 
             if (request.method() == HttpMethod.OPTIONS){
                 f = ctx.write(this.makeResponse(request, OK,

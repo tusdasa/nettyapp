@@ -13,7 +13,6 @@ public class NettyApplication implements ApplicationRunner {
 
 	public NettyApplication(NettyServerStart nettyServerStart) {
 		this.nettyServerStart = nettyServerStart;
-		nettyServerStart.start();
 	}
 
 	public static void main(String[] args) {
@@ -22,6 +21,7 @@ public class NettyApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
+		nettyServerStart.start();
 		Runtime.getRuntime().addShutdownHook(new Thread(nettyServerStart::stop));
 	}
 }

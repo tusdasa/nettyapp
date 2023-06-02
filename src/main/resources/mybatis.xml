@@ -9,10 +9,10 @@
         <setting name="cacheEnabled" value="true"/>
         <setting name="defaultStatementTimeout" value="5"/>
     </settings>
-    <typeAliases>
-        <package name="ren.epub.nettyapp.dao" />
-    </typeAliases>
-    <mappers>
-        <mapper resource="mapper/CallbackrecordDAO.xml" />
-    </mappers>
+<!--    <typeAliases>-->
+<!--        <package name="ren.epub.nettyapp.dao" />-->
+<!--    </typeAliases>-->
+<!--    <mappers>-->
+<!--        <mapper resource="mapper/CallbackrecordDAO.xml" />-->
+<!--    </mappers>-->
 </configuration>
